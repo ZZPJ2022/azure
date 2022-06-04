@@ -41,5 +41,13 @@ public class LocationService {
     @Autowired
     LocationRepository locationRepository;
 
-  
+
+    public void addNewLocation(String xml) {
+    }
+
+    public String getAllLocationsXmlForUser(String username) {
+    }
+
+    public String getStatistics(String username) {
+    }
 }
