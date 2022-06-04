@@ -1,5 +1,7 @@
 package com.facecloud.facecloudserverapp.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.relational.core.mapping.Table;
 
 import javax.persistence.Entity;
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table
+@Getter
+@Setter
 public class Location {
 
     @Id
@@ -31,39 +35,4 @@ public class Location {
         this.time = time;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
 }
