@@ -72,8 +72,9 @@ public class LocationService {
         }
     }
 
-    public String getAllLocationsXmlForUser(String username) {
-        return null;
+    public String getAllLocationsXmlForUser(String userName) throws ParserConfigurationException, TransformerException {
+        List<Location> locationList = locationRepository.findAllByUserName(userName);
+        return parseToXml(locationList, userName);
     }
 
     public String getStatistics(String userName) throws TransformerException, ParserConfigurationException {
@@ -168,7 +169,11 @@ public class LocationService {
         return location;
     }
 
-    private String transformDocumentToString(Document document) {
-        return null;
+    private String transformDocumentToString(Document document) throws TransformerException {
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer trans = tf.newTransformer();
+        StringWriter sw = new StringWriter();
+        trans.transform(new DOMSource(document), new StreamResult(sw));
+        return sw.toString();
     }
 }
