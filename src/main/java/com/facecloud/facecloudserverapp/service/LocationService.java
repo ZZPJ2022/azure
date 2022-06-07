@@ -42,7 +42,34 @@ public class LocationService {
     LocationRepository locationRepository;
 
 
-    public void addNewLocation(String xml) {
+    public void addNewLocation(String xmlData) throws DataValidationException {
+        try {
+            Document document = DocumentBuilderFactory
+                    .newInstance()
+                    .newDocumentBuilder()
+                    .parse(new InputSource(new StringReader(xmlData)));
+
+            String userName = document.getElementsByTagName("username").item(0).getTextContent();
+            int realLocationsCount = 0;
+
+            NodeList locationsList = document.getElementsByTagName("location");
+            for(int i=0; i<locationsList.getLength(); i++) {
+                Node node = locationsList.item(i);
+                if(node.getNodeType() == Node.ELEMENT_NODE) {
+                    String latitude = ((Element) node).getElementsByTagName("latitude").item(0).getTextContent();
+                    String longitude = ((Element) node).getElementsByTagName("longitude").item(0).getTextContent();
+                    String time = ((Element) node).getElementsByTagName("time").item(0).getTextContent();
+                    Location location = createLocation(userName,latitude, longitude, time);
+                    realLocationsCount++;
+                    locationRepository.save(location);
+                }
+            }
+            if(realLocationsCount == 0) {
+                throw new DataValidationException("Dostalem pustego requesta (nie bylo w nim lokacji)");
+            }
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getAllLocationsXmlForUser(String username) {
@@ -119,6 +146,26 @@ public class LocationService {
         all.appendChild(days);
 
         return transformDocumentToString(document);
+    }
+	
+	private Location createLocation(String userName, String latitude, String longitude, String time) throws DataValidationException {
+        Location location = new Location();
+        try {
+            location.setUserName(userName);
+            location.setLatitude(Double.parseDouble(latitude));
+            location.setLongitude(Double.parseDouble(longitude));
+            location.setTime(LocalDateTime.of(
+                    Integer.parseInt(time.split("-")[0]),
+                    Integer.parseInt(time.split("-")[1]),
+                    Integer.parseInt(time.split(" ")[0].split("-")[2]),
+                    Integer.parseInt(time.split(" ")[1].split(":")[0]),
+                    Integer.parseInt(time.split(" ")[1].split(":")[1]),
+                    Integer.parseInt(time.split(" ")[1].split(":")[2])
+            )); // 2022-01-06 13:32:28
+        } catch(Throwable e) {
+            throw new DataValidationException(e);
+        }
+        return location;
     }
 
     private String transformDocumentToString(Document document) {
