@@ -148,7 +148,22 @@ public class LocationService {
 
         return transformDocumentToString(document);
     }
-	
+    public String parseToXml(List<Location> locations, String userName) throws ParserConfigurationException, TransformerException {
+        Document document = DocumentBuilderFactory
+                .newInstance()
+                .newDocumentBuilder().newDocument();
+        Element root = document.createElement("locations");
+        document.appendChild(root);
+
+        Element name = document.createElement("username");
+        name.appendChild(document.createTextNode(userName));
+        root.appendChild(name);
+
+        locations.forEach(location -> {
+            appendNodes(document, location, root);
+        });
+        return transformDocumentToString(document);
+    }
 	private Location createLocation(String userName, String latitude, String longitude, String time) throws DataValidationException {
         Location location = new Location();
         try {
@@ -176,4 +191,22 @@ public class LocationService {
         trans.transform(new DOMSource(document), new StreamResult(sw));
         return sw.toString();
     }
+
+    protected void appendNodes(Document document, Location location, Element root) {
+        Element locationElement = document.createElement("location");
+        root.appendChild(locationElement);
+
+        Element latitude = document.createElement("latitude");
+        latitude.appendChild(document.createTextNode(Double.toString(location.getLatitude())));
+        locationElement.appendChild(latitude);
+
+        Element longitude = document.createElement("longitude");
+        longitude.appendChild(document.createTextNode(Double.toString(location.getLongitude())));
+        locationElement.appendChild(longitude);
+
+        Element time = document.createElement("time");
+        time.appendChild(document.createTextNode(location.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
+        locationElement.appendChild(time);
+    }
+
 }
