@@ -1,3 +1,5 @@
+package com.facecloud.facecloudserverapp;
+
 import com.facecloud.facecloudserverapp.entity.Location;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
