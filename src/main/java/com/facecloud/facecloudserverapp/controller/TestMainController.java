@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class TestMainController {
 
-    @GetMapping()
+    @GetMapping(value = "/homePage")
     public String helloWorld() {
-        return "Hello World!";
+        return "Hello, World!";
     }
 }

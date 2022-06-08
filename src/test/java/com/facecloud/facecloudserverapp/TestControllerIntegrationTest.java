@@ -29,9 +29,9 @@ public class TestControllerIntegrationTest {
 
     @Test
     public void testReturnDefault() throws Exception {
-        String name = "Jan";
+        String name = "jan";
         when(service.getAllLocationsXmlForUser(name)).thenReturn("Hello");
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/{username}/statistics",name)).andDo(print())
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/homePage",name)).andDo(print())
                 .andExpect(status().isOk());
     }
 

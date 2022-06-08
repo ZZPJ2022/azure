@@ -22,7 +22,7 @@ public class LocationTest {
 
     @Test
     @DisplayName("checking initialization of location")
-    void ensureLocationInitializationWorks()
+    void testLocationInitializationWorks()
     {
         assertEquals(location.getId(), 0L);
         assertEquals(location.getUserName(), "user");
